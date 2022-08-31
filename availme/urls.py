@@ -5,5 +5,6 @@ import availme_webapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('availme_webapp.urls')),
+    path('', include('website.urls')),
+    path('app/', include('availme_webapp.urls')),
 ]
