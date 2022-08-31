@@ -43,10 +43,17 @@
     <div id="context">
         <div id="header">
 
-            <div id="logo"><img src="" alt=""></div>
-            <div id="panel">HI
-                
+            <!-- <div id="logo"><img src="" alt=""></div> -->
+            <div id="logo"><h2 style="color: #b1483b; text-shadow: 2px 3px 5px black;">availme</h2></div>
+
+            <div id="panel">
+                <h4>Web App</h4>
+                <button>Upgrade 2 Pro</button>
             </div>
+        </div>
+
+        <div id="page">
+            <div class="loader" id="pageloader"></div>
         </div>
     </div>
 
@@ -58,7 +65,8 @@
 
     // Global Vars
     let isSidebarActive = false;
-    let activePage = 'DASHBOARD'
+    let activePage = 'MAP';
+    let pageLoadingIcon = document.getElementById('pageloader');
 
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
@@ -72,7 +80,28 @@
     }
 
     function switch2Page(pageid){
+        if (pageid == activePage) {
+            return null;
+        }
+        enablePageLoader();
+
+        // LOAD THE PAGE
         console.log(pageid);
+        
+
+        // CHANGE THE UI
+        document.getElementById(pageid).classList.add('active');
+        document.getElementById(activePage).classList.remove('active');
+        activePage = pageid;
+
+        disablePageLoader();
+    }
+
+    function enablePageLoader() {
+        pageLoadingIcon.style.visibility = 'visible';
+    }
+    function disablePageLoader() {
+        pageLoadingIcon.style.visibility = 'hidden';        
     }
 
 </script>
