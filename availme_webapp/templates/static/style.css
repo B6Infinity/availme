@@ -82,6 +82,9 @@ body{
     text-align: right;
 }
 
+button:hover{
+    background-color: #303131;
+}
 button{
     background-color: #141313;
     padding: 5px;
@@ -102,6 +105,7 @@ button{
     /* height: 120px; */
     animation: spin 2s linear infinite;
 
+    visibility: hidden;
     position: absolute;
     margin: 15px;
     top: 10vh;

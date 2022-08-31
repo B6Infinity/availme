@@ -27,14 +27,19 @@
             </div>
         </div>
 
-        <div class="sidebar_button" id="DASHBOARD" onclick="switch2Page(this.id);">
+        <div class="sidebar_button active" id="DASHBOARD" onclick="switch2Page(this.id);">
             <div id="">
                 <i class="fa-solid fa-window-maximize"></i>
             </div>
         </div>
-        <div class="sidebar_button active" id="MAP" onclick="switch2Page(this.id);">
+        <div class="sidebar_button" id="MAP" onclick="switch2Page(this.id);">
             <div id="">
                 <i class="fa-solid fa-map"></i>
+            </div>
+        </div>
+        <div class="sidebar_button" id="SETTINGS" onclick="switch2Page(this.id);">
+            <div id="">
+                <i class="fa-solid fa-gear"></i>
             </div>
         </div>
 
@@ -65,8 +70,9 @@
 
     // Global Vars
     let isSidebarActive = false;
-    let activePage = 'MAP';
+    let activePage = 'DASHBOARD';
     let pageLoadingIcon = document.getElementById('pageloader');
+    let csrftoken
 
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
