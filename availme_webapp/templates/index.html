@@ -1,19 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<div style="display:none;"> <!-- DJANGO STUFF -->
+    {% load static %}
+</div>
+
+
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>availme - App</title>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="">
 
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/b2370eb060.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <div id="header">
-        <div id="logo"><img src="" alt=""></div>
-        <div id="panel"></div>
+    <div id="sidebar">
+
+        <div class="sidebar_button" id="sidebarToggle"> <!-- TOGGLE BTN -->
+            <div  onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+
+        <div class="sidebar_button">
+            <div id="">
+                <i class="fa-solid fa-window-maximize"></i>
+            </div>
+        </div>
+        <div class="sidebar_button active">
+            <div id="">
+                <i class="fa-solid fa-map"></i>
+            </div>
+        </div>
+
     </div>
+
+    <div id="context">
+        <div id="header">
+
+            <div id="logo"><img src="" alt=""></div>
+            <div id="panel">HI
+                
+            </div>
+        </div>
+    </div>
+
+    
 </body>
+<script>
+    let isSidebarActive = false;
+    function toggleSidebar(){
+        let sideBar = document.getElementById('sidebar');
+        if (isSidebarActive) {
+            sideBar.style.width = '70px';
+            isSidebarActive = false;
+        }else{
+            sideBar.style.width = '250px';
+            isSidebarActive = true;
+        }
+    }
+</script>
 </html>
