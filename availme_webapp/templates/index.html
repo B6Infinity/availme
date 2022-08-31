@@ -27,12 +27,12 @@
             </div>
         </div>
 
-        <div class="sidebar_button">
+        <div class="sidebar_button" id="DASHBOARD" onclick="switch2Page(this.id);">
             <div id="">
                 <i class="fa-solid fa-window-maximize"></i>
             </div>
         </div>
-        <div class="sidebar_button active">
+        <div class="sidebar_button active" id="MAP" onclick="switch2Page(this.id);">
             <div id="">
                 <i class="fa-solid fa-map"></i>
             </div>
@@ -52,8 +52,14 @@
 
     
 </body>
+
+<!-- SCRIPT -->
 <script>
+
+    // Global Vars
     let isSidebarActive = false;
+    let activePage = 'DASHBOARD'
+
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
         if (isSidebarActive) {
@@ -64,5 +70,10 @@
             isSidebarActive = true;
         }
     }
+
+    function switch2Page(pageid){
+        console.log(pageid);
+    }
+
 </script>
 </html>
