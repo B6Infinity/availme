@@ -13,7 +13,7 @@ def master_api(request):
 
         html = f'''<h1>THIS IS BEGINNIN of {page_id}</h1>
         '''
-        sleep(2)
+        sleep(0.2)
         return JsonResponse({
             "content": {
                 "html": html,

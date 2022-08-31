@@ -63,9 +63,18 @@ body{
 	   -moz-box-shadow: 0 8px 6px -6px black;
 	        box-shadow: 0 8px 6px -6px black;
 }
-/* #logo{
-    background-color: aqua;
-} */
+
+#logotxt:hover{
+    /* background-color: aqua; */
+    color: #3b1d13;
+    text-shadow: none;
+}
+#logotxt{
+    user-select: none;
+    transition: 0.2s;
+    color: #b1483b;
+    text-shadow: 2px 3px 5px black;
+}
 
 .active i{
     color: #b1483b;
@@ -93,6 +102,10 @@ button{
 }
 
 #page{
+    position: relative;
+}
+
+#injectedHTML{
     position: relative;
 }
 
