@@ -54,12 +54,14 @@
 
             <div id="panel">
                 <h4>Web App</h4>
+                <div style="font-size: 10px; display: inline-block;">Logged in as: {{user}}</div>
                 <button>Upgrade 2 Pro</button>
             </div>
         </div>
 
         <div id="page">
             <div class="loader" id="pageloader"></div>
+            <div id="injectedHTML"></div>
         </div>
     </div>
 
@@ -73,6 +75,8 @@
     let isSidebarActive = false;
     let activePage = 'DASHBOARD';
     let pageLoadingIcon = document.getElementById('pageloader');
+    let csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    let dynamicHTMLBox = document.getElementById('injectedHTML');
 
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
@@ -85,14 +89,40 @@
         }
     }
 
-    function switch2Page(pageid){
-        if (pageid == activePage) {
-            return null;
-        }
+    function enablePageLoader() {
+        pageLoadingIcon.style.visibility = 'visible';
+        dynamicHTMLBox.style.opacity = '0.3';
+    }
+    function disablePageLoader() {
+        pageLoadingIcon.style.visibility = 'hidden';        
+        dynamicHTMLBox.style.opacity = '1';
+    }
+
+    async function switch2Page(pageid){
         enablePageLoader();
 
         // LOAD THE PAGE
-        console.log(pageid);
+        
+        let form = new FormData();
+        form.set('requested_page', pageid)
+
+        await fetch(`appfetch`,
+        {
+            method: 'POST',
+            body: form,
+            headers: {
+                'Accept': 'multipart/form-data, application/json, text/plain, */*',
+                "X-CSRFToken": csrftoken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data);
+
+            // Work with the data sent by the server here
+            dynamicHTMLBox.innerHTML = data["content"].html;
+            
+        });
         
 
         // CHANGE THE UI
@@ -103,32 +133,11 @@
         disablePageLoader();
     }
 
-    function enablePageLoader() {
-        pageLoadingIcon.style.visibility = 'visible';
-    }
-    function disablePageLoader() {
-        pageLoadingIcon.style.visibility = 'hidden';        
-    }
+    // START SCRIPT
+    switch2Page('DASHBOARD');
 
 
-    let csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value; // Add `{% csrf_token %}` in your HTML somewhere above this line of code
-    let form = new FormData(); // Add Data to be sent to this 'form'
+    
 
-    fetch(`serverendpoint`,
-    {
-        method: 'POST',
-        body: form,
-        headers: {
-            'Accept': 'multipart/form-data, application/json, text/plain, */*',
-            "X-CSRFToken": csrftoken
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-
-        // Work with the data sent by the server here
-
-    });
 </script>
 </html>
