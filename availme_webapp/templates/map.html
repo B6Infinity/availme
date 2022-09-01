@@ -12,7 +12,31 @@
 
     <div id="INJECTED_HTML">
         <div id="map"></div>
+        <div id="markerdetails_panel">
+            <div class="header" style="height: 60px;">
+                <h2 id="board_title">Click on a Pin</h2>
+            </div>
+
+            <div id="board_details">
+                <h2 class="details-heading">Location</h2>
+                <h4 id="board_location">--</h4>
+                <!-- <button id="open_board_in_maps" style="">Open in Google Maps</button> -->
+                <br>
+                <h2 class="details-heading">STATUS</h2>
+                <h4 id="board_status">--</h4>
+                
+                <img id="board_image" src="https://dummyimage.com/1600x900/7f7f7f" alt="">
+                
+                <h2 class="details-heading">Details</h2>
+                
+
+
+            </div>
+
+        </div>
     </div>
+
+
 </body>
 </html>
 <style>
@@ -37,36 +61,160 @@
         font-family: ABeeZee, sans-serif;
         margin: 0%;
         padding: 0%;
+
+        display: flex;
+        flex-direction: row;
         
     }
     #map{
-        position: absolute;
-        top: 0%;
-        bottom: 0%;
-        left: 0%;
-        right: 0;
-        width: 100%;
+        flex-grow: 1;
         height: 90vh;
         
     }
+    #markerdetails_panel{
+        width: 250px;
+        background-color: #141313;
+    }
+    
+    
+
+    .details-heading{
+        margin: 8px 0;
+    }
+    #board_details{
+        background-color: #141313;
+        height: 80vh;
+        overflow: auto;
+    }
+
+    #board_title{
+        padding: 10px;
+    }
+    #board_details{
+        padding: 20px;
+        
+    }
+    #board_image{
+        width: 100%;
+        object-fit: contain;
+        margin: 20px 0;
+    }
+
 </style>
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
 <script>
-
-    // let map = L.map('map').setView([22.8446559, 88.6227933], 30);
-    // L.tileLayer('https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=Vn6OzBCIiUNs3EoDNoR9', {
-    //     'attribution': '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-    // }).addTo(map);
-
+    
+    // Init the Map
     let map = L.map('map', {
         center: [22.847413, 88.629926],
         zoom: 20    
     }, invalidateSize=true);
+    
+    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=QyQkn390DFJyFREjP5GR', {attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'}).addTo(map);
 
-    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=Vn6OzBCIiUNs3EoDNoR9', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    // Icons
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    var redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    var greyIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });    
+    var yellowIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    let FETCHED_BOARDS = {
+        "0": {
+            "coordinates": [22.848009, 88.629250],
+            "location": 'ASHOKNAGAR',
+            "status": "OBJECTION",
+            "title": "8 No. More - 10x10"
+        },
+        "1": {
+            "coordinates": [22.84845, 88.629250],
+            "location": 'HABRA',
+            "status": "OBJECTION",
+            "title": "Habra - 10x10"
+        },
+        "2": {
+            "coordinates": [22.84845, 88.639000],
+            "location": 'ASHOKNAGAR',
+            "status": "BLACKLISTED",
+            "title": "Ashoknagar Rd - 10x10"
+        },
+    }
+
+
+    function addMarker(id, context){
+        // console.log('');
+        let getIconColor = {
+            "OBJECTION": redIcon,
+            "BLACKLISTED": greyIcon
+        }
+        
+
+        let marker = L.marker(context.coordinates, {
+            title: 'Jirat Rd',
+            id: id,
+            icon: getIconColor[context.status],
+        });
+    
+        // Title
+        marker.bindTooltip(context.title, {permanent:true}).openTooltip();
+    
+
+        marker.on('click', function(e) {
+            // alert(e.latlng);
+
+            // LOAD DATA FROM SERVER ABOUT SAID BOARD
+            viewDetails(e.sourceTarget.options.id);
+        } );
+
+
+
+        marker.addTo(map);        
+    }
+
+    function viewDetails(boardId) {
+        // View details in the panel
+        let content = FETCHED_BOARDS[boardId];
+        
+        document.getElementById('board_title').innerHTML = content.title;
+        document.getElementById('board_location').innerHTML = content.location;
+        document.getElementById('board_status').innerHTML = content.status;
+
+    }
 
     
-    L.marker([22.847413, 88.629926]).addTo(map);
-    L.marker([22.848009, 88.629253]).addTo(map);
+    
+    
+
+    
+    for(let board in FETCHED_BOARDS){
+        addMarker(board, FETCHED_BOARDS[board]);
+    }
 
 </script>
