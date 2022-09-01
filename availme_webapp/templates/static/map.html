@@ -76,7 +76,16 @@
         background-color: #141313;
     }
     
-    
+    .header{
+        background-color: #b1483b;
+        height: 80px;
+        -webkit-box-shadow: 0 8px 6px -6px black;
+        -moz-box-shadow: 0 8px 6px -6px black;
+                box-shadow: 0 8px 6px -6px black;
+
+        display: flex;
+        align-items: center;
+    }
 
     .details-heading{
         margin: 8px 0;
@@ -167,6 +176,7 @@
         },
     }
 
+    
 
     function addMarker(id, context){
         // console.log('');
@@ -188,6 +198,9 @@
 
         marker.on('click', function(e) {
             // alert(e.latlng);
+            var enlargedIcon = marker.options.icon;
+            enlargedIcon.options.iconSize = [30, 46];
+            marker.setIcon(enlargedIcon);
 
             // LOAD DATA FROM SERVER ABOUT SAID BOARD
             viewDetails(e.sourceTarget.options.id);
@@ -210,8 +223,6 @@
 
     
     
-    
-
     
     for(let board in FETCHED_BOARDS){
         addMarker(board, FETCHED_BOARDS[board]);
