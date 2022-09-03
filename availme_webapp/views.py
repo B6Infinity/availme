@@ -24,14 +24,15 @@ def fetchBoards(request, context):
     
     if len(filters) == 0:
         fetched_boards = Board.objects.all()
-    else:
-        if 'LOCATION' in filters:
-            print(filters['LOCATION'])
-            fetched_boards += Board.objects.filter(location__iexact=filters['LOCATION'])
-        if 'STATUS' in filters:
-            fetched_boards += Board.objects.filter(status=filters['STATUS'])
+    else: # Filters applied
+        all_boards = Board.objects.all()
 
-    
+        if 'LOCATION' in filters:
+            all_boards = all_boards.filter(location__iexact=filters['LOCATION'])
+        if 'STATUS' in filters:
+            all_boards = all_boards.filter(status=filters['STATUS'])
+
+        fetched_boards = all_boards
 
     # SERIALISE
     FETCHED_BOARDS = {}
