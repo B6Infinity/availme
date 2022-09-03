@@ -85,6 +85,25 @@
     let csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     let dynamicHTMLBox = document.getElementById('injectedHTML');
 
+    var redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+        });
+    var greyIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });    
+        
+        
+
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
         if (isSidebarActive) {
@@ -147,7 +166,9 @@
         disablePageLoader();
     }
 
-    function switch2map() {
+
+
+    function switch2map() { //PAGE
         dynamicHTMLBox.innerHTML = `
                     <div id="INJECTED_HTML">
                         <div id="map"></div>
@@ -237,112 +258,47 @@
             center: [22.847413, 88.629926],
             zoom: 20    
         }, invalidateSize=true);
-        
         L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=QyQkn390DFJyFREjP5GR', {attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'}).addTo(map);
-
-        // Icons
-        var greenIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        var redIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-        var greyIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });    
-        var yellowIcon = new L.Icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
-        let FETCHED_BOARDS = {
-            "0": {
-                "coordinates": [22.848009, 88.629250],
-                "location": 'ASHOKNAGAR',
-                "status": "OBJECTION",
-                "title": "8 No. More - 10x10"
-            },
-            "1": {
-                "coordinates": [22.84845, 88.629250],
-                "location": 'HABRA',
-                "status": "OBJECTION",
-                "title": "Habra - 10x10"
-            },
-            "2": {
-                "coordinates": [22.84845, 88.639000],
-                "location": 'ASHOKNAGAR',
-                "status": "BLACKLISTED",
-                "title": "Ashoknagar Rd - 10x10"
-            },
-        }
-
         
+        
+        // FETCH BOARDS
+        let FETCHED_BOARDS = {}
+       
+        let form = new FormData(); // Add Data to be sent to this 'form'
 
-        function addMarker(id, context){
-            // console.log('');
-            let getIconColor = {
-                "OBJECTION": redIcon,
-                "BLACKLISTED": greyIcon
+        form.set('context_refernce', 'df6b1c2b6f');
+        form.set('context', JSON.stringify({
+            "body":{
+                "filters": {
+                    "LOCATION": 'ASHOKNAGAR',
+                    "STATUS": 'OBJECTION' 
+                },
             }
+        }));
+
+        fetch(`appfetch`,{
+            method: 'POST',
+            body: form,
+            headers: {
+            'Accept': 'multipart/form-data, application/json, text/plain, */*',
+            "X-CSRFToken": csrftoken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.requested_boards);
+            FETCHED_BOARDS = data.requested_boards;
             
-
-            let marker = L.marker(context.coordinates, {
-                title: 'Jirat Rd',
-                id: id,
-                icon: getIconColor[context.status],
-            });
+            addBoards2Map(map, FETCHED_BOARDS);
+        });
         
-            // Title
-            marker.bindTooltip(context.title, {permanent:true}).openTooltip();
         
-
-            marker.on('click', function(e) {
-                // alert(e.latlng);
-
-                // LOAD DATA FROM SERVER ABOUT SAID BOARD
-                viewDetails(e.sourceTarget.options.id);
-            } );
-
-
-
-            marker.addTo(map);        
-        }
-
-        function viewDetails(boardId) {
-            // View details in the panel
-            let content = FETCHED_BOARDS[boardId];
-            
-            document.getElementById('board_title').innerHTML = content.title;
-            document.getElementById('board_location').innerHTML = content.location;
-            document.getElementById('board_status').innerHTML = content.status;
-
-        }
 
         
         
-        
-        for(let board in FETCHED_BOARDS){
-            addMarker(board, FETCHED_BOARDS[board]);
-        }
+        // for(let board in FETCHED_BOARDS){
+        //     addMarker(board, FETCHED_BOARDS[board]);
+        // }
 
     }
 
@@ -356,3 +312,74 @@
 
 </script>
 </html>
+
+
+<!-- API FUNCTIONS -->
+<script>
+
+    function fetchAllBoards() {
+        return {}
+    }
+    
+    function fetchBoards(location) {
+        return {}        
+    }
+
+</script>
+
+<!-- MAP SCRIPT -->
+<script>
+
+
+
+    function addMarker(map, id, context){
+
+        let getIconColor = {
+            "OBJECTION": redIcon,
+            "BLACKLISTED": greyIcon
+        }
+        
+
+        let marker = L.marker(context.coordinates, {
+            title: 'Jirat Rd',
+            id: id,
+            icon: getIconColor[context.status],
+        });
+
+        // Title
+        marker.bindTooltip(context.title, {permanent:true}).openTooltip();
+
+
+        marker.on('click', function(e) {
+            // alert(e.latlng);
+
+            // LOAD DATA FROM SERVER ABOUT SAID BOARD
+            viewDetails(e.sourceTarget.options.id);
+        } );
+
+
+
+        marker.addTo(map);        
+    }
+
+    function viewDetails(boardId) {
+        // View details in the panel
+        let content = FETCHED_BOARDS[boardId];
+        
+        document.getElementById('board_title').innerHTML = content.title;
+        document.getElementById('board_location').innerHTML = content.location;
+        document.getElementById('board_status').innerHTML = content.status;
+
+    }
+
+    function addBoards2Map(map, FETCHED_BOARDS){
+        // CLEAR THE MARKERS ON MAP
+
+
+        for(let board in FETCHED_BOARDS){
+            addMarker(map, board, FETCHED_BOARDS[board]);
+        }
+    }
+
+
+</script>
