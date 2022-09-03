@@ -1,112 +1,126 @@
+import json
 from time import sleep
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
+
+from .models import Board
+
+
+
+# INTERNAL FUNCTIONS
+def fetchBoards(request, context):
+
+    context_body = context['body']
+    filters = context_body['filters']
+    
+    
+    
+    # -------------------------------------------------------------------------------------------------------------------------
+    
+    
+
+    # GET FROM DB
+    fetched_boards = []
+    
+    if len(filters) == 0:
+        fetched_boards = Board.objects.all()
+    else:
+        if 'LOCATION' in filters:
+            print(filters['LOCATION'])
+            fetched_boards += Board.objects.filter(location__iexact=filters['LOCATION'])
+        if 'STATUS' in filters:
+            fetched_boards += Board.objects.filter(status=filters['STATUS'])
+
+    
+
+    # SERIALISE
+    FETCHED_BOARDS = {}
+
+    for board in fetched_boards:
+
+        FETCHED_BOARDS[board.id] = {
+            "coordinates": [board.lattitude, board.longitude],
+            "location": board.location,
+            "status": board.status,
+            "title": board.title
+        }
+
+    
+
+    
+    
+
+    RESPONSE = {
+        "request_username": request.user.username,
+        "requested_boards": FETCHED_BOARDS
+    }
+    
+    return RESPONSE
+
+def fetchPageHTML(request, context):
+    pageid = ''
+    return {}
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# GLOBAL VARS
+API_CONTEXT_REFERENCE = {
+    "asg4tsdg4g": fetchPageHTML, # "PAGE_HTML_INJECTION", 
+    "df6b1c2b6f": fetchBoards, # "BOARD"
+}
+
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
 
 def master_api(request):
+    '''
+    The body of each Request should be like the following:
+
+    
+    context_refernce = "",
+    context = {
+        "body":{}
+    },
+    
+    '''
+
+    # Authenticate Request
     if request.user.username == 'broteen':
 
-        page_id = request.POST['requested_page']
+        # Identify what the client is asking for
+        context_action = API_CONTEXT_REFERENCE[request.POST['context_refernce']]
+        context = json.loads(request.POST['context'])
 
-        if page_id == 'MAP':
-            return JsonResponse({
-                "content": {
-                    "html": '''
-                    <div id="INJECTED_HTML">
-                        <div id="map"></div>
-                        <div id="markerdetails_panel">
-                            <div class="header" style="height: 60px;">
-                                <h2 id="board_title">Click on a Pin</h2>
-                            </div>
+        
 
-                            <div id="board_details">
-                                <h2 class="details-heading">Location</h2>
-                                <h4 id="board_location">--</h4>
-                                <!-- <button id="open_board_in_maps" style="">Open in Google Maps</button> -->
-                                <br>
-                                <h2 class="details-heading">STATUS</h2>
-                                <h4 id="board_status">--</h4>
-                                
-                                <img id="board_image" src="https://dummyimage.com/1600x900/7f7f7f" alt="">
-                                
-                                <h2 class="details-heading">Details</h2>
-                                
+        # Get what the client is asking for
+        JSON_RESPONSE = context_action(request, context)
 
 
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <style>
-    
-                        #INJECTED_HTML{
-                            color: rgb(246, 246, 223);
-                            font-family: ABeeZee, sans-serif;
-                            margin: 0%;
-                            padding: 0%;
-
-                            display: flex;
-                            flex-direction: row;
-                            
-                        }
-                        #map{
-                            flex-grow: 1;
-                            height: 90vh;
-                            
-                        }
-                        #markerdetails_panel{
-                            width: 250px;
-                            background-color: #141313;
-                        }
-                        
-                        
-
-                        .details-heading{
-                            margin: 8px 0;
-                        }
-                        #board_details{
-                            background-color: #141313;
-                            height: 80vh;
-                            overflow: auto;
-                        }
-
-                        #board_title{
-                            padding: 10px;
-                        }
-                        #board_details{
-                            padding: 20px;
-                            
-                        }
-                        #board_image{
-                            width: 100%;
-                            object-fit: contain;
-                            margin: 20px 0;
-                        }
-
-                    </style>
-
-                    
-                    ''',
-                    "JS": ''''''
-                },
-                "page": page_id
-            })
-
-
-
-        html = f'''<h1>THIS IS BEGINNIN of {page_id}</h1>
-        '''
-        # sleep(0.2)
-        return JsonResponse({
-            "content": {
-                "html": html,
-                "page": page_id
-            }
-        })
+        # RETURN JSON RESPONSE
+        return JsonResponse(JSON_RESPONSE, safe=False)
     else:
         return JsonResponse({"FORBIDDEN": "Authentication Error", "ELABORATION": "Unauthenticated Request"})
+
+
+
+
+
+
 

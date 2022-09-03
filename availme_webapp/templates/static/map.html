@@ -122,14 +122,6 @@
     L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=QyQkn390DFJyFREjP5GR', {attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'}).addTo(map);
 
     // Icons
-    var greenIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
     var redIcon = new L.Icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -146,40 +138,20 @@
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
     });    
-    var yellowIcon = new L.Icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-
-    let FETCHED_BOARDS = {
-        "0": {
-            "coordinates": [22.848009, 88.629250],
-            "location": 'ASHOKNAGAR',
-            "status": "OBJECTION",
-            "title": "8 No. More - 10x10"
-        },
-        "1": {
-            "coordinates": [22.84845, 88.629250],
-            "location": 'HABRA',
-            "status": "OBJECTION",
-            "title": "Habra - 10x10"
-        },
-        "2": {
-            "coordinates": [22.84845, 88.639000],
-            "location": 'ASHOKNAGAR',
-            "status": "BLACKLISTED",
-            "title": "Ashoknagar Rd - 10x10"
-        },
-    }
+    
+    let FETCHED_BOARDS = {}
+    // let FETCHED_BOARDS = {
+    //     "0": {
+    //         "coordinates": [22.848009, 88.629250],
+    //         "location": 'ASHOKNAGAR',
+    //         "status": "OBJECTION",
+    //         "title": "8 No. More - 10x10"
+    //     },
+    // }
 
     
 
     function addMarker(id, context){
-        // console.log('');
         let getIconColor = {
             "OBJECTION": redIcon,
             "BLACKLISTED": greyIcon
@@ -224,8 +196,21 @@
     
     
     
-    for(let board in FETCHED_BOARDS){
-        addMarker(board, FETCHED_BOARDS[board]);
+    // for(let board in FETCHED_BOARDS){
+    //     addMarker(board, FETCHED_BOARDS[board]);
+    // }
+
+</script>
+
+<!-- API FUNCTIONS -->
+<script>
+
+    function fetchAllBoards() {
+        return {}
+    }
+    
+    function fetchBoards(location) {
+        return {}        
     }
 
 </script>
