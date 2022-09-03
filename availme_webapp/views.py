@@ -59,8 +59,21 @@ def fetchBoards(request, context):
     return RESPONSE
 
 def fetchPageHTML(request, context):
-    pageid = ''
-    return {}
+    print(context)
+    body = context['body']
+    page_id = body['page_id']
+
+    RESPONSE = {
+        "request_username": request.user.username,
+        "requested_content": {
+            "page_id": page_id,
+            "html": f'''
+            <h1>{page_id} is here!</h1>
+            '''
+        }
+    }
+
+    return RESPONSE
 
 
 
@@ -93,15 +106,14 @@ def master_api(request):
     '''
     The body of each Request should be like the following:
 
-    
     context_refernce = "",
     context = {
         "body":{}
     },
     
     '''
-
-    # Authenticate Request
+    
+    #   # Authenticate Request
     if request.user.username == 'broteen':
 
         # Identify what the client is asking for
@@ -116,6 +128,13 @@ def master_api(request):
 
         # RETURN JSON RESPONSE
         return JsonResponse(JSON_RESPONSE, safe=False)
+        '''All JSON_REPONSES should be like the following
+        {
+            "request_username": request.user.username,
+            "requested_content": {}
+        }
+        '''
+
     else:
         return JsonResponse({"FORBIDDEN": "Authentication Error", "ELABORATION": "Unauthenticated Request"})
 
