@@ -342,8 +342,32 @@
         return {}
     }
     
-    function fetchBoards(location) {
-        return {}        
+    function fetchBoards(filters) {
+
+        let form = new FormData(); // Add Data to be sent to this 'form'
+
+        form.set('context_refernce', 'df6b1c2b6f');
+        form.set('context', JSON.stringify({
+            "body":{
+                "filters": filters,
+            }
+        }));
+
+        fetch(`appfetch`,{
+            method: 'POST',
+            body: form,
+            headers: {
+            'Accept': 'multipart/form-data, application/json, text/plain, */*',
+            "X-CSRFToken": csrftoken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            FETCHED_BOARDS = data.requested_boards;
+            
+        });
+        
     }
 
     function getPrequisiteData() {
