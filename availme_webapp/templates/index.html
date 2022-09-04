@@ -172,7 +172,7 @@
     }
 
 
-
+    let FETCHED_BOARDS = {};
     function switch2map() { //PAGE
         dynamicHTMLBox.innerHTML = `
             <div id="INJECTED_HTML">
@@ -290,7 +290,7 @@
         
         
         // FETCH BOARDS
-        let FETCHED_BOARDS = {}
+        
        
         let form = new FormData(); // Add Data to be sent to this 'form'
 
@@ -346,6 +346,28 @@
         return {}        
     }
 
+    function getPrequisiteData() {
+        
+        let form = new FormData(); // Add Data to be sent to this 'form'
+        fetch(`serverendpoint`,{
+            method: 'POST',
+            body: form,
+            headers: {
+            'Accept': 'multipart/form-data, application/json, text/plain, */*',
+            "X-CSRFToken": csrftoken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        
+            // Work with data sent by the server here
+        
+        });
+    }
+
+    
+
 </script>
 
 <!-- MAP SCRIPT -->
@@ -380,7 +402,7 @@
 
 
 
-        marker.addTo(map);        
+        marker.addTo(map);
     }
 
     function viewDetails(boardId) {
@@ -395,7 +417,6 @@
 
     function addBoards2Map(map, FETCHED_BOARDS){
         // CLEAR THE MARKERS ON MAP
-
 
         for(let board in FETCHED_BOARDS){
             addMarker(map, board, FETCHED_BOARDS[board]);

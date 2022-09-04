@@ -37,22 +37,27 @@
                 
                 
                 <div class="header" style="height: 60px;">
-                    <h2 id="board_title">Filter Panel</h2>
+                    <h2 id="board_title">Show Only:</h2>
                 </div>
+
+
                 <div id="filter_panel">
-                    <h2 class="details-heading">Filters</h2>
-                    <h4 id="board_location">--</h4>
-                    <!-- <button id="open_board_in_maps" style="">Open in Google Maps</button> -->
-                    <br>
-                    <h2 class="details-heading">STATUS</h2>
-                    <h4 id="board_status">--</h4>
-                    
-                    <img id="board_image" src="https://dummyimage.com/1600x900/7f7f7f" alt="">
-                    
-                    <h2 class="details-heading">Details</h2>
-                    
+                    <h2 class="details-heading">Locations</h2>
+                    <label><input name="HABRA" type="checkbox"> HABRA</label><br>
+                    <label><input name="ASHOKNAGAR" type="checkbox"> ASHOKNAGAR</label><br>
                 </div>
-                    
+                <script> // FILTER SCRIPT
+
+
+                </script>
+                <style>
+                    input{
+                        color: white;
+                    }
+                    input[type="checkbox"]{
+                        margin: 5px;
+                    }
+                </style>  
                     
             </div>
 
@@ -116,13 +121,13 @@
     #board_details{
         /* background-color: #141313; */
         background-color: #303131;
-        /* height: 80vh; */
-        /* height: 50%; */
+        height: 30vh;
         overflow: auto;
         flex-grow: 1;
     }
     #filter_panel{
-        /* height: 50%; */
+        padding: 20px;
+        height: 30vh;
         overflow: auto;
         flex-grow: 1;
     }

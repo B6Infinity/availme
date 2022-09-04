@@ -109,6 +109,28 @@ button{
     position: relative;
 }
 
+.badge-invert{
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+    margin: 4px;
+    background-color: #b1483b;
+    box-shadow: 2px 2px 5px #303131;
+    user-select: none;
+    border-radius: 35px;
+    
+}
+.badge{
+    display: inline-block;
+    text-align: center;
+    padding: 5px;
+    margin: 4px;
+    background-color: #303131;
+    box-shadow: 2px 2px 5px #b1483b;
+    user-select: none;
+    border-radius: 35px;
+}
+
 .loader {
     border: 10px solid #303131; /* Light grey */
     border-top: 10px solid #b1483b; /* Blue */
