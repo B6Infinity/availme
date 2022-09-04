@@ -74,6 +74,10 @@
     
 </body>
 
+
+
+
+
 <!-- SCRIPT -->
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
 <script>
@@ -102,7 +106,13 @@
         shadowSize: [41, 41]
     });    
         
-        
+    
+    // FUNCTIONS
+
+    function applyFilters(filters){
+        fetchBoards(filters);
+        refreshMap();
+    }
 
     function toggleSidebar(){
         let sideBar = document.getElementById('sidebar');
@@ -171,7 +181,8 @@
         disablePageLoader();
     }
 
-
+    let map;
+    let markers;
     let FETCHED_BOARDS = {};
     function switch2map() { //PAGE
         dynamicHTMLBox.innerHTML = `
@@ -205,9 +216,18 @@
                             <h2 id="board_title">Filters</h2>
                         </div>
                         <div id="filter_panel">
-                            <h2 class="details-heading"></h2>
-                            
-                            
+                            <h2 class="details-heading">Locations</h2>
+                            <label><input name="HABRA" type="checkbox" onchange="if(this.checked){filters.LOCATIONS.push('HABRA')}else{filters.LOCATIONS.splice(filters.LOCATIONS.indexOf('HABRA'), 1)}"> HABRA</label><br>
+                            <label><input name="ASHOKNAGAR" type="checkbox" onchange="if(this.checked){filters.LOCATIONS.push('ASHOKNAGAR')}else{filters.LOCATIONS.splice(filters.LOCATIONS.indexOf('ASHOKNAGAR'), 1)}"> ASHOKNAGAR</label><br>
+                            <br>
+
+                            <h2 class="details-heading">Status</h2>
+                            <label><input name="OBJECTION" type="checkbox" onchange="if(this.checked){filters.STATUSES.push('OBJECTION')}else{filters.STATUSES.splice(filters.STATUSES.indexOf('OBJECTION'), 1)}"> OBJECTION</label><br>
+                            <label><input name="BLACKLISTED" type="checkbox" onchange="if(this.checked){filters.STATUSES.push('BLACKLISTED')}else{filters.STATUSES.splice(filters.STATUSES.indexOf('BLACKLISTED'), 1)}"> BLACKLISTED</label><br>
+                            <br>
+
+                            <br>
+                            <button onclick="applyFilters(filters)">Apply Filters</button>
                         </div>
                             
                             
@@ -282,7 +302,7 @@
         `;
 
         // Init the Map
-        let map = L.map('map', {
+        map = L.map('map', {
             center: [22.847413, 88.629926],
             zoom: 20    
         }, invalidateSize=true);
@@ -332,6 +352,7 @@
 
 </script>
 </html>
+
 
 
 <!-- API FUNCTIONS -->
@@ -397,7 +418,20 @@
 <script>
 
     function refreshMap(){
-        // markers.clearLayers();
+
+        // DELETE THE MAP
+        map.remove();
+
+        // INIT THE MAP
+        map = L.map('map', {
+            center: [22.847413, 88.629926],
+            zoom: 20    
+        }, invalidateSize=true);
+        L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=QyQkn390DFJyFREjP5GR', {attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'}).addTo(map);
+        
+        // ADD THE NEW MARKERS
+        addBoards2Map(map, FETCHED_BOARDS);
+
     }
 
     function addMarker(map, id, context){
@@ -428,6 +462,7 @@
 
 
         marker.addTo(map);
+
     }
 
     function viewDetails(boardId) {
@@ -448,5 +483,8 @@
         }
     }
 
-
+    let filters = {
+        "LOCATIONS": [],
+        "STATUSES": []
+    };
 </script>

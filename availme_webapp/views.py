@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from .models import Board
 
+from itertools import chain
 
 
 # INTERNAL FUNCTIONS
@@ -27,12 +28,21 @@ def fetchBoards(request, context):
     else: # Filters applied
         all_boards = Board.objects.all()
 
-        if 'LOCATION' in filters:
-            all_boards = all_boards.filter(location__iexact=filters['LOCATION'])
-        if 'STATUS' in filters:
-            all_boards = all_boards.filter(status=filters['STATUS'])
+        if 'LOCATIONS' in filters and len(filters['LOCATIONS']) != 0:
+            location_boards = []
+            for location in filters['LOCATIONS']:
+                location_boards = list(chain(all_boards.filter(location__iexact=location), location_boards))
+            
+            all_boards = location_boards
+        if 'STATUSES' in filters and len(filters['STATUSES']) != 0:
+            status_boards = []
+            for status in filters['STATUSES']:
+                status_boards = list(chain(all_boards.filter(status__iexact=status), status_boards))
+
+            all_boards = status_boards
 
         fetched_boards = all_boards
+        
 
     # SERIALISE
     FETCHED_BOARDS = {}

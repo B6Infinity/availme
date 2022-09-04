@@ -43,13 +43,27 @@
 
                 <div id="filter_panel">
                     <h2 class="details-heading">Locations</h2>
-                    <label><input name="HABRA" type="checkbox"> HABRA</label><br>
-                    <label><input name="ASHOKNAGAR" type="checkbox"> ASHOKNAGAR</label><br>
+                    <label><input name="HABRA" type="checkbox" onchange="if(this.checked){filters.LOCATIONS.push('HABRA')}else{filters.LOCATIONS.splice(filters.LOCATIONS.indexOf('HABRA'), 1)}"> HABRA</label><br>
+                    <label><input name="ASHOKNAGAR" type="checkbox" onchange="if(this.checked){filters.LOCATIONS.push('ASHOKNAGAR')}else{filters.LOCATIONS.splice(filters.LOCATIONS.indexOf('ASHOKNAGAR'), 1)}"> ASHOKNAGAR</label><br>
+                    <br>
+
+                    <h2 class="details-heading">Status</h2>
+                    <label><input name="OBJECTION" type="checkbox" onchange="if(this.checked){filters.STATUSES.push('OBJECTION')}else{filters.STATUSES.splice(filters.STATUSES.indexOf('OBJECTION'), 1)}"> OBJECTION</label><br>
+                    <label><input name="BLACKLISTED" type="checkbox" onchange="if(this.checked){filters.STATUSES.push('BLACKLISTED')}else{filters.STATUSES.splice(filters.STATUSES.indexOf('BLACKLISTED'), 1)}"> BLACKLISTED</label><br>
+                    <br>
+
+                    <br>
+                    <button onclick="applyFilters(filters)">Apply Filters</button>
                 </div>
                 <script> // FILTER SCRIPT
+                    let filters = {
+                        "LOCATIONS": [],
+                        "STATUSES": []
+                    };
 
 
                 </script>
+
                 <style>
                     input{
                         color: white;
