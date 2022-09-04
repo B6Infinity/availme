@@ -175,31 +175,46 @@
 
     function switch2map() { //PAGE
         dynamicHTMLBox.innerHTML = `
-                    <div id="INJECTED_HTML">
-                        <div id="map"></div>
-                        <div id="markerdetails_panel">
-                            <div class="header" style="height: 60px;">
-                                <h2 id="board_title">Click on a Pin</h2>
-                            </div>
-
-                            <div id="board_details">
-                                <h2 class="details-heading">Location</h2>
-                                <h4 id="board_location">--</h4>
-                                <!-- <button id="open_board_in_maps" style="">Open in Google Maps</button> -->
-                                <br>
-                                <h2 class="details-heading">STATUS</h2>
-                                <h4 id="board_status">--</h4>
-                                
-                                <img id="board_image" src="https://dummyimage.com/1600x900/7f7f7f" alt="">
-                                
-                                <h2 class="details-heading">Details</h2>
-                                
-
-
-                            </div>
-
+            <div id="INJECTED_HTML">
+                <div id="map"></div>
+                <div id="markerdetails_panel">
+                    
+                    <div style="display: flex; flex-direction: column;">
+                        <div class="header" style="height: 60px;">
+                            <h2 id="board_title">Click on a Pin</h2>
                         </div>
+                        
+                        <div id="board_details">
+                            <h2 class="details-heading">Location</h2>
+                            <h4 id="board_location">--</h4>
+                            <!-- <button id="open_board_in_maps" style="">Open in Google Maps</button> -->
+                            <br>
+                            <h2 class="details-heading">STATUS</h2>
+                            <h4 id="board_status">--</h4>
+                            
+                            <img id="board_image" src="https://dummyimage.com/1600x900/7f7f7f" alt="">
+                            
+                            <h2 class="details-heading">Details</h2>
+                            
+                            
+                            
+                        </div>
+                        
+                        
+                        <div class="header" style="height: 60px;">
+                            <h2 id="board_title">Filters</h2>
+                        </div>
+                        <div id="filter_panel">
+                            <h2 class="details-heading"></h2>
+                            
+                            
+                        </div>
+                            
+                            
                     </div>
+
+                </div>
+            </div>
 
                     <style>
     
@@ -236,9 +251,17 @@
                             margin: 8px 0;
                         }
                         #board_details{
-                            background-color: #141313;
-                            height: 80vh;
+                            /* background-color: #141313; */
+                            background-color: #303131;
+                            height: 30vh;
                             overflow: auto;
+                            flex-grow: 1;
+                        }
+                        #filter_panel{
+                            padding: 20px;
+                            height: 30vh;
+                            overflow: auto;
+                            flex-grow: 1;
                         }
 
                         #board_title{
